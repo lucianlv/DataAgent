@@ -77,8 +77,9 @@ flowchart TD
     Rewrite --> Parallel{并行检索}
     Parallel -->|通道A| VecBiz[向量库: 业务术语]
     Parallel -->|通道B| VecAgent[向量库: 智能体知识]
-    VecBiz & VecAgent --> Merge[合并文档]
-    Merge --> Format[格式化: [来源]内容]
+    VecBiz --> Merge[合并文档]
+    VecAgent --> Merge
+    Merge --> Format["格式化: [来源]内容"]
     Format --> Output[输出 EVIDENCE]
 ```
 
@@ -151,7 +152,8 @@ flowchart TD
 flowchart TD
     Input[召回的表/字段] --> LogicalFK[加载逻辑外键]
     LogicalFK --> FilterFK[过滤相关外键]
-    Input & FilterFK --> Build[构建初始Schema]
+    Input --> Build[构建初始Schema]
+    FilterFK --> Build
     Build --> FineSelect[LLM: 精细化筛选]
     FineSelect --> Semantic[加载语义模型]
     Semantic --> Output[输出 SchemaDTO]
@@ -209,7 +211,8 @@ flowchart TD
     CheckMode -- No --> CheckError{有拒绝反馈?}
     CheckError -- Yes --> InjectError[注入反馈信息]
     CheckError -- No --> NormalPrompt[构建标准Prompt]
-    InjectError & NormalPrompt --> LLM[LLM: 生成计划]
+    InjectError --> LLM[LLM: 生成计划]
+    NormalPrompt --> LLM
     LLM --> Output[输出 Plan JSON]
 ```
 
@@ -419,7 +422,8 @@ flowchart TD
 ```mermaid
 flowchart TD
     Input[计划 + 所有步骤结果] --> Config[加载优化配置]
-    Input & Config --> Prompt[构建报告Prompt]
+    Input --> Prompt[构建报告Prompt]
+    Config --> Prompt
     Prompt --> LLM[LLM: 生成报告]
     LLM --> Stream[流式输出]
 ```
